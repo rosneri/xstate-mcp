@@ -27,6 +27,10 @@
     "statemachine"
   ],
   "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/rosneri/xstate-mcp.git"
+  },
   "dependencies": {
     "@modelcontextprotocol/sdk": "^1.29.0",
     "xstate": "^5.32.0",
