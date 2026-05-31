@@ -11,12 +11,16 @@
       "types": "./dist/index.d.ts"
     }
   },
+  "bin": {
+    "xstate-mcp": "./bin/xstate-mcp.ts"
+  },
   "scripts": {
     "build": "tsc",
     "dev": "tsc --watch",
     "prepublishOnly": "bun run build"
   },
   "files": [
+    "bin",
     "dist",
     "src"
   ],
