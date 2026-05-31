@@ -16,17 +16,9 @@ MCP server for XState v5 machine introspection and simulation. Gives Claude (and
 | `list_guard_conditions` | Every guarded transition with human-readable guard description |
 | `export_state_diagram` | Mermaid `stateDiagram-v2` output for any machine |
 
-## Usage
+## Quick start (no machines)
 
-### Standalone (no machines)
-
-Run the server directly with no registered machines — useful for testing the MCP connection:
-
-```bash
-bunx @rosneri/xstate-mcp
-```
-
-Or in your `.mcp.json` / `claude_desktop_config.json`:
+Run the server directly with no registered machines — useful for testing the connection:
 
 ```json
 {
@@ -39,23 +31,40 @@ Or in your `.mcp.json` / `claude_desktop_config.json`:
 }
 ```
 
-### With your machines
+## With your machines
 
-Install the package:
+### Option 1 — Install locally (recommended)
+
+Install as a dev dependency so the server starts instantly without a network round-trip:
 
 ```bash
-bun add @rosneri/xstate-mcp
+bun add -d @rosneri/xstate-mcp
 # or
-npm install @rosneri/xstate-mcp
+npm install --save-dev @rosneri/xstate-mcp
 ```
 
-Create an entry point that registers your machines:
+In `.mcp.json`:
+
+```json
+{
+  "mcpServers": {
+    "xstate-mcp": {
+      "command": "bun",
+      "args": ["./node_modules/.bin/xstate-mcp"]
+    }
+  }
+}
+```
+
+### Option 2 — Custom entry point
+
+Create an entry file that registers your machines and passes them to the server:
 
 ```typescript
 // mcp-entry.ts
 import { createXstateMcpServer } from "@rosneri/xstate-mcp";
-import { authMachine } from "./auth-machine.js";
-import { checkoutMachine } from "./checkout-machine.js";
+import { authMachine } from "./src/auth-machine.js";
+import { checkoutMachine } from "./src/checkout-machine.js";
 
 await createXstateMcpServer([
   {
@@ -73,7 +82,7 @@ await createXstateMcpServer([
 ]);
 ```
 
-Wire it up in `.mcp.json`:
+In `.mcp.json`:
 
 ```json
 {
@@ -81,19 +90,6 @@ Wire it up in `.mcp.json`:
     "xstate-mcp": {
       "command": "bun",
       "args": ["run", "mcp-entry.ts"]
-    }
-  }
-}
-```
-
-Or with Node.js (compiled):
-
-```json
-{
-  "mcpServers": {
-    "xstate-mcp": {
-      "command": "node",
-      "args": ["mcp-entry.js"]
     }
   }
 }
